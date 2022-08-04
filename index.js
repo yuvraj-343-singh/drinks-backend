@@ -19,15 +19,18 @@ app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-
+app.get('/', (req, res) => {
+    res.send({msg:"hello"})
+})
 let drinkRef = db.collection("Drinks");
-let drinks = [];
 app.get('/fetch', async (req, res) => {
-    drinks = [];
+    const drinks = [];
     await drinkRef.get().then((element) => {
-        element.forEach(el => {
-            drinks.push(el.data())
-        })
+        if(element && element.length > 0) {
+            element.forEach(el => {
+                drinks.push(el.data())
+            })
+        } 
     })
     res.send({data:drinks, msg:"Success"})
 })
